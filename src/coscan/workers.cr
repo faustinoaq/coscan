@@ -39,9 +39,10 @@ module Coscan
 
     def save_previous_scan
       puts "Saving previous scan..."
-      `mv tmp/*.ips tmp/*.tmp tmp/*.header tmp/tmp/`
-      `mv bin/*.bin tmp/bin/`
-      `mv dat/*.dat tmp/dat/`
+      ["tmp/*.ips", "tmp/*.tmp", "tmp/*.header", "bin/*.bin", "dat/*.dat"].each do |files|
+        dest = files.split("/").first
+        `mv #{files} tmp/#{dest}/` unless Dir.glob(files).empty?
+      end
     end
 
     def check_root

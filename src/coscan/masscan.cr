@@ -1,6 +1,6 @@
 module Coscan
   class Masscan
-    class_property range = "198.7.0.0-198.7.255.255"
+    class_property range = "198.7.200.0-198.7.255.255"
     class_property name = ""
 
     def initialize

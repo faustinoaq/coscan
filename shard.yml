@@ -1,0 +1,13 @@
+name: coscan
+version: 0.1.0
+
+authors:
+  - Faustino Aguilar <faustinoaq@gmail.com>
+
+targets:
+  coscan:
+    main: src/coscan.cr
+
+crystal: 0.24.1
+
+license: MIT

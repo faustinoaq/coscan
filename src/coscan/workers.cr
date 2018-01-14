@@ -8,8 +8,8 @@ module Coscan
       check_root
       check_dependencies
       check_internet
-      save_previous_scan
       create_dirs
+      save_previous_scan
       confirm_start
     end
 

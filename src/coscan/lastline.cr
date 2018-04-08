@@ -25,7 +25,7 @@ module Coscan
           spawn process(ip)
         end
         CONCURRENCY_LEVEL.times do
-          @ch.receive
+          puts @ch.receive
         end
       end
       puts "#{@counter} bin files downloaded!".colorize(:yellow)

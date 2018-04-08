@@ -21,7 +21,7 @@ module Coscan
 
     def analyze_ips
       @ips.in_groups_of(CONCURRENCY_LEVEL) do |ip_group|
-        ip_group.compact do |ip|
+        ip_group.compact.each do |ip|
           spawn process(ip)
         end
         CONCURRENCY_LEVEL.times do

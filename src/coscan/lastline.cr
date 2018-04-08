@@ -1,5 +1,7 @@
 module Coscan
   class LastLine
+    CONCURRENCY_LEVEL = 10
+
     class_property username = "admin"
     class_property password = "admin"
 
@@ -11,10 +13,6 @@ module Coscan
       puts "Requesting adresses..."
       search_ips
       analyze_ips
-      @ips.each do
-        puts @ch.receive
-      end
-      puts "#{@counter} bin files downloaded!".colorize(:yellow)
     end
 
     def search_ips
@@ -22,9 +20,15 @@ module Coscan
     end
 
     def analyze_ips
-      @ips.each do |ip|
-        spawn process(ip)
+      @ips.in_group_of(CONCURRENCY_LEVEL) do |ip_group|
+        ip_group.compact do |ip|
+          spawn process(ip)
+        end
+        CONCURRENCY_LEVEL.times do
+          @ch.receive
+        end
       end
+      puts "#{@counter} bin files downloaded!".colorize(:yellow)
     end
 
     def process(ip)

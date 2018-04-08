@@ -1,7 +1,5 @@
 module Coscan
   class LastLine
-    CONCURRENCY_LEVEL = 10
-
     class_property username = "admin"
     class_property password = "admin"
 
@@ -19,13 +17,26 @@ module Coscan
       @ips = File.read_lines("tmp/#{Masscan.name}.ips")
     end
 
+    def concurrency_level
+      if (s = search_ips.size) < 10
+        s
+      else
+        10
+      end
+    end
+
     def analyze_ips
-      @ips.in_groups_of(CONCURRENCY_LEVEL) do |ip_group|
-        ip_group.compact.each do |ip|
-          spawn process(ip)
+      @ips.in_groups_of(concurrency_level) do |ip_group|
+        ip_group.each do |ip|
+          if ip
+            spawn process(ip)
+          else
+            @ch.send ""
+          end
         end
-        CONCURRENCY_LEVEL.times do
-          puts @ch.receive
+        concurrency_level.times do
+          msg = @ch.receive
+          puts msg unless msg.empty?
         end
       end
       puts "#{@counter} bin files downloaded!".colorize(:yellow)
